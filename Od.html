@@ -8,7 +8,27 @@
 </head>
 
 <body>
+  <div id="app">
+    <p>你好：<span id="name"></span></p>
+  </div>
+  <script>
+    var obj = {};
 
+    //数据拦截
+    Object.defineProperty(obj, 'name', {
+      get() {
+        console.log('有人想要获取name属性');
+        return document.getElementById('name').innerHTML;
+      },
+      set(v) {
+        console.log('有人想要修改name属性');
+        document.getElementById('name').innerHTML = v;
+      }
+    })
+
+    obj.name = 'johnny'
+    console.log(obj.name);
+  </script>
 </body>
 
 </html>
