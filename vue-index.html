@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kvue</title>
+</head>
+
+<body>
+  <script src="./KVue.js"></script>
+  <script>
+    var el = new KVue({
+      data: {
+        foo: 'foo',
+        bar: {
+          mua: 'mua'
+        }
+      }
+    })
+
+    el.foo = 'aaaa';
+    el.bar.mua = 'bbb';
+  </script>
+</body>
+
+</html>
