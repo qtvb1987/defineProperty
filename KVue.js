@@ -12,10 +12,16 @@ class KVue {
 
     this.observe(this.$data);
 
-    new Watcher(this, 'foo');
-    this.foo; //读一次，触发依赖收集
-    new Watcher(this, 'bar.mua');
-    this.bar.mua; //读一次，触发依赖收集
+    // new Watcher(this, 'foo');
+    // this.foo; //读一次，触发依赖收集
+    // new Watcher(this, 'bar.mua');
+    // this.bar.mua; //读一次，触发依赖收集
+
+    new Compile(options.el, this);
+
+    if (options.created) {
+      options.created.call(this);
+    }
 
   }
 
@@ -93,15 +99,21 @@ class Dep {
 
 //创建Watcher:保存data中数值和页面中的挂钩关系
 class Watcher {
-  constructor(vm, key) {
+  constructor(vm, key, cb) {
     //创建实例时立刻将该实例指向Dep.target便于依赖收集
     Dep.target = this;
     this.vm = vm;
     this.key = key;
+    this.cb = cb;
+
+    Dep.target = this;
+    this.vm[this.key]; //触发依赖收集
+    Dep.target = null;
   }
 
   //更新
   update() {
     console.log(this.key + "更新了！");
+    this.cb.call(this.vm, this.vm[this.key]);
   }
 }
