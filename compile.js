@@ -89,14 +89,47 @@ class Compile {
       if (arrtName.indexOf('k-') == 0) {
         //指令
         const dir = arrtName.substring(2); //xxx
+
         //执行
         this[dir] && this[dir](node, exp);
+
+      } else if (arrtName.indexOf('@') == 0) {
+        const dir = arrtName.substring(1); //事件名称
+        //事件监听处理
+        this.eventHandler(node, this.$vm, exp, dir);
       }
     })
   }
 
+
+  //事件处理:给node添加事件监听，dir-事件名称
+  //通过vm.$options.methods[exp]可获得回调函数
+  eventHandler(node, vm, exp, dir) {
+    let fn = vm.$options.methods && vm.$options.methods[exp];
+    if (dir && fn) {
+      node.addEventListener(dir, fn.bind(vm));
+    }
+  }
   text(node, exp) {
     this.update(node, exp, 'text')
   }
+  html(node, exp) {
+    this.update(node, exp, 'html');
+  }
+  htmlUpdator(node, value) {
+    console.log('html更新了' + value);
+    node.innerHTML = value;
+  }
+  model(node, exp) {
+    this.update(node, exp, 'model');
+    node.addEventListener('input', e => {
+      this.$vm[exp] = e.target.value;
+    })
+  }
+  modelUpdator(node, value) {
+    node.value = value;
+  }
+
+
 
 }
